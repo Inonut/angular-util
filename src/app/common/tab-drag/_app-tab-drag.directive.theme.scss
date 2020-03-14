@@ -1,0 +1,15 @@
+@mixin app-tab-drag-theme() {
+  .app-tab-drag {
+
+    .cdk-drag-placeholder {
+      opacity: 0 !important;
+    }
+
+    .mat-tab-label{
+      user-select: none;
+      &.cdk-drag-disabled {
+        transform: none !important;
+      }
+    }
+  }
+}

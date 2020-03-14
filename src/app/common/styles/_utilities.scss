@@ -1,0 +1,31 @@
+@mixin apply-fixed-width($width) {
+  width: $width;
+  min-width: $width;
+  max-width: $width;
+}
+
+@mixin apply-fixed-height($height) {
+  height: $height;
+  min-height: $height;
+  max-height: $height;
+}
+
+@mixin apply-fixed-width-flex-1($width) {
+  flex: 1 1 $width;
+  width: $width;
+  min-width: $width;
+  max-width: $width;
+}
+
+@mixin apply-fixed-width-flex-0($width) {
+  flex: 0 0 $width;
+  width: $width;
+  min-width: $width;
+  max-width: $width;
+}
+
+@mixin apply-ellipsis() {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}

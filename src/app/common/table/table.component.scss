@@ -1,0 +1,394 @@
+@import '~@angular/material/theming';
+@import "../styles/_utilities";
+
+$table-header-cell-height: 31px;
+$table-cell-height: 21px;
+
+@mixin virtual-scroll() {
+  .mat-table.isx-table-components.isx-table-virtual-scroll-viewport {
+    .cdk-virtual-scroll-viewport {
+      @extend .scrollable;
+      flex: 1;
+
+      .cdk-virtual-scroll-content-wrapper {
+        width: var(--table-width);
+        min-height: 1px;
+      }
+    }
+
+    .isx-table-header-container,
+    .isx-table-footer-container {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+
+      .content-wrapper {
+        flex: 1;
+
+        .mat-header-row,
+        .mat-footer-row {
+          align-self: flex-start;
+          position: sticky;
+          transform: translateX(var(--table-translate-x));
+
+          &:after {
+            content: "";
+            height: 100%;
+            position: relative;
+            right: 0;
+            background: transparent;
+            flex-shrink: 0;
+            width: var(--table-offset-scroll);
+          }
+
+          .mat-header-cell,
+          .mat-footer-cell {
+            flex-shrink: 0;
+          }
+        }
+      }
+    }
+  }
+}
+
+@mixin table($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+
+  .mat-table.isx-table-components {
+    @extend .scrollable;
+
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    background-color: mat-color($primary, 100);
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .mat-header-row,
+    .mat-row {
+      display: flex;
+      flex-shrink: 0;
+
+      border-width: 0 0 1px;
+      border-style: solid;
+      border-bottom-color: rgba(0, 0, 0, .12);
+
+      .mat-header-cell,
+      .mat-cell {
+        display: flex;
+        align-items: center;
+        flex: initial;
+        flex-shrink: 0;
+        user-select: none;
+        height: 100%;
+        min-height: 100%;
+
+        border-right-width: 0;
+        border-right-style: solid;
+        border-right-color: rgba(0, 0, 0, .12);
+
+        padding: 0 10px;
+
+        .mat-icon {
+          font-size: 14px;
+          height: 14px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+    }
+
+    .mat-header-row {
+      @include apply-fixed-height($table-header-cell-height);
+
+      border-width: 0 0 1px;
+
+      background-color: white;
+
+      &.isx-mat-header-filtered-row {
+        .mat-header-cell {
+          border-right-color: rgba(0, 0, 0, .12);
+          border-right-style: solid;
+          border-right-width: 1px;
+        }
+      }
+    }
+
+    .mat-row {
+      min-height: $table-cell-height;
+      max-height: 25px;
+
+      background-color: mat-color($primary, 100);
+
+      .mat-cell {
+        min-height: inherit;
+
+        overflow: hidden;
+        word-wrap: break-word;
+      }
+    }
+  }
+}
+
+@mixin drag-and-drop() {
+  .mat-table.isx-table-components.isx-table-drag-and-drop {
+    .mat-header-row,
+    .mat-row {
+      display: flex;
+
+      .mat-header-cell,
+      .mat-cell {
+
+        &.isx-drag-column {
+          pointer-events: none;
+          z-index: 1;
+        }
+
+        &:not(.isx-drag-column) {
+          transition: transform 0.5s ease;
+        }
+      }
+
+      .mat-header-cell {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        .drag-column-container {
+          display: flex;
+          align-items: center;
+          flex: 1;
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+@mixin resize() {
+  .mat-table.isx-table-components.isx-table-resize {
+    .mat-header-row,
+    .mat-row {
+      .mat-header-cell,
+      .mat-cell {
+        flex: initial;
+        &.isx-resize-column {
+          pointer-events: none;
+        }
+      }
+    }
+
+    .mat-header-row {
+      .mat-header-cell {
+        position: relative;
+
+        .resize-column-icon {
+          position: absolute;
+          right: -3px;
+          top: 0;
+          width: 9px;
+          height: 100%;
+          cursor: ew-resize;
+
+          &:after {
+            content: "";
+            background: rgba(0, 0, 0, .12);
+            position: absolute;
+            height: 100%;
+            width: 3px;
+            right: 3px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@mixin row-buttons($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+
+  .mat-table.isx-table-components {
+    .mat-row.isx-row-action {
+
+      .isx-over-table-actions {
+        z-index: 2;
+      }
+
+      position: relative;
+
+      &:hover {
+        .isx-table-actions-show-container {
+          display: flex;
+          right: initial;
+          position: absolute;
+          transform: translateX(var(--row-actions-translate-x));
+          background: linear-gradient(90deg, rgba(white, 0) 0, white 15%, white 85%, rgba(white, 0));
+        }
+      }
+
+      .isx-table-actions-show-container {
+        display: none;
+        position: absolute;
+        flex: 1;
+        justify-content: flex-end;
+        height: $table-cell-height;
+        align-self: center;
+        z-index: 1;
+
+        .isx-table-actions-show {
+          display: flex;
+          align-items: center;
+          height: $table-cell-height;
+          right: 0;
+          padding: 0 48px;
+          white-space: nowrap;
+
+          .isx-table-action-btn {
+            width: 26px;
+            height: 24px;
+
+            color: mat-color($accent, 700);
+            &[disabled] {
+              &[disabled] {
+                color: mat-color($accent, 700);
+                opacity: 0.2;
+              }
+            }
+            .mat-icon {
+              font-size: 16px;
+
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@mixin selection($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+
+  .mat-table.isx-table-components {
+    .mat-row {
+
+      &:hover {
+        background-color: mat-color($accent, 100, 0.3);
+      }
+
+      &.isx-selected {
+        background-color: mat-color($accent, 100, 0.7);
+      }
+    }
+  }
+}
+
+@mixin table-predef-columns($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+
+  .mat-table.isx-table-components {
+
+    .mat-header-row,
+    .mat-row {
+
+      input {
+        height: $table-cell-height;
+      }
+
+      .mat-table-checkbox {
+        width: 32px;
+        min-width: 32px;
+        justify-content: center;
+      }
+
+      .mat-table-icon {
+        width: 50px;
+        min-width: 50px;
+        justify-content: center;
+      }
+
+      .mat-table-code {
+        width: 105px;
+        min-width: 105px;
+      }
+
+      .mat-table-date {
+        width: 150px;
+        min-width: 150px;
+      }
+
+      .mat-table-text {
+        flex: 1;
+        min-width: 130px;
+        width: 0;
+      }
+
+      .mat-table-char {
+        width: 50px;
+        min-width: 50px;
+        justify-content: center;
+      }
+
+      .mat-table-number {
+        width: 130px;
+        min-width: 130px;
+        justify-content: flex-end;
+      }
+
+      .mat-table-input {
+        width: 80px;
+        min-width: 80px;
+
+        &.mat-header-cell {
+          justify-content: flex-end;
+        }
+        &.mat-cell {
+          input {
+            width: 100%;
+            text-align: right;
+            border: none;
+            padding: 0 5px;
+            background-color: mat-color($primary, 300);
+          }
+        }
+      }
+    }
+  }
+}
+
+
+@mixin table-message() {
+  .mat-table.isx-table-components.isx-table-message {
+    position: relative;
+
+    .isx-message-placeholder {
+      position: absolute;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      top: 200px;
+      font-size: 16px;
+    }
+  }
+}
+
+//@include table();
+//@include virtual-scroll();
+//@include drag-and-drop();
+//@include selection();
+//@include resize();
+//@include row-buttons();

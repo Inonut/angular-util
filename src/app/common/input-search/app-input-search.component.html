@@ -1,0 +1,6 @@
+<input #inputElement type="text" class="isx-input-search-field" [placeholder]="placeholderText" [formControl]="searchInputFormControl" [readonly]="readonly">
+<div class="isx-input-search-suffix">
+    <mat-icon class="isx-input-search-magnifier" svgIcon="search_black" *ngIf="hasMagnifier" (click)="startSearch()"></mat-icon>
+    <mat-icon class="isx-input-search-arrow" *ngIf="hasArrow" (click)="startSearch()">arrow_drop_down</mat-icon>
+    <mat-icon class="isx-input-search-close" svgIcon="close" (click)="clearSearch($event)"></mat-icon>
+</div>
