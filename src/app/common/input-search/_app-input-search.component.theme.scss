@@ -1,7 +1,0 @@
-@import '~@angular/material/theming';
-
-@mixin app-input-search-theme() {
-  .app-input-search-field::placeholder {
-    color: black;
-  }
-}

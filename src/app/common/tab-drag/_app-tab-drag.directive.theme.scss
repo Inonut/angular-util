@@ -5,8 +5,9 @@
       opacity: 0 !important;
     }
 
-    .mat-tab-label{
+    .mat-tab-label {
       user-select: none;
+
       &.cdk-drag-disabled {
         transform: none !important;
       }

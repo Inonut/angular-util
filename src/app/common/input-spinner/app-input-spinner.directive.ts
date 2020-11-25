@@ -4,44 +4,42 @@ import {takeUntil} from 'rxjs/operators';
 import {insertAfter} from '../utilities';
 
 @Directive({
-  selector: '[appInputSpinner]'
+    selector: '[appInputSpinner]'
 })
 export class AppInputSpinnerDirective implements AfterViewInit, OnDestroy {
 
-  private unsubscribed = new Subject();
+    @Input() left = -30;
+    @Input() top = -4;
+    @Input() showStream = new Subject();
+    private unsubscribed = new Subject();
+    private spennerEl: Element;
 
-  @Input() left = -30;
-  @Input() top = -4;
-  @Input() showStream = new Subject();
+    constructor(private renderer: Renderer2,
+                private el: ElementRef) {
+    }
 
-  private spennerEl: Element;
+    ngAfterViewInit() {
 
-  constructor(private renderer: Renderer2,
-              private el: ElementRef) {
-  }
+        this.spennerEl = this.renderer.createElement('div') as Element;
+        this.spennerEl.setAttribute('class', 'lds-spinner hidden');
+        this.spennerEl.setAttribute('style', `left: ${this.left}px; top: ${this.top}px`);
+        this.spennerEl.innerHTML = `<div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>`;
 
-  ngAfterViewInit() {
+        insertAfter(this.spennerEl, this.el.nativeElement);
 
-    this.spennerEl = this.renderer.createElement('div') as Element;
-    this.spennerEl.setAttribute('class', 'lds-spinner hidden');
-    this.spennerEl.setAttribute('style', `left: ${this.left}px; top: ${this.top}px`);
-    this.spennerEl.innerHTML = `<div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>`;
+        this.showStream
+            .pipe(takeUntil(this.unsubscribed))
+            .subscribe((toggle) => {
+                if (!toggle) {
+                    this.spennerEl.classList.add('hidden');
+                } else {
+                    this.spennerEl.classList.remove('hidden');
+                }
+            });
+    }
 
-    insertAfter(this.spennerEl, this.el.nativeElement);
-
-    this.showStream
-      .pipe(takeUntil(this.unsubscribed))
-      .subscribe((toggle) => {
-        if (!toggle) {
-          this.spennerEl.classList.add('hidden');
-        } else {
-          this.spennerEl.classList.remove('hidden');
-        }
-      });
-  }
-
-  public ngOnDestroy(): void {
-    this.unsubscribed.next();
-    this.unsubscribed.complete();
-  }
+    public ngOnDestroy(): void {
+        this.unsubscribed.next();
+        this.unsubscribed.complete();
+    }
 }

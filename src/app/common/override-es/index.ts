@@ -1,13 +1,13 @@
 declare global {
-  namespace Electron {
-    interface BrowserWindowConstructorOptions {
-      windowData: any;
-    }
+    namespace Electron {
+        interface BrowserWindowConstructorOptions {
+            windowData: any;
+        }
 
-    interface WebContents {
-      browserWindowOptions: BrowserWindowConstructorOptions;
+        interface WebContents {
+            browserWindowOptions: BrowserWindowConstructorOptions;
+        }
     }
-  }
 }
 
 import './array.override';
