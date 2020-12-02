@@ -1,0 +1,12 @@
+:host {
+    display: flex;
+    height: 100%;
+}
+
+.wrapper {
+    height: 300px;
+}
+
+table {
+    width: 100%;
+}
