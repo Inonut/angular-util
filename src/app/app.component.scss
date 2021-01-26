@@ -1,0 +1,25 @@
+@import "./src/app/common/table/styles";
+
+.app {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+}
+
+.wrapper {
+    height: 300px;
+}
+
+table {
+    width: 100%;
+}
+
+
+.cdk-table-virtual-scroll {
+    flex: 1;
+}
+
+.mat-row {
+    height: 20px;
+    min-height: 20px;
+}

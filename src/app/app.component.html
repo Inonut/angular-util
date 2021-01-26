@@ -1,31 +1,30 @@
-<cdk-virtual-scroll-viewport tvsItemSize="20" class="mat-elevation-z2" style="width: 100%">
-    <table mat-table [isxColumnDrag]="displayedColumns" isxColumnResize [dataSource]="dataSource">
+<mat-table cdk-table-virtual-scroll-fixed-size #tvs=cdkTableVirtualScrollFixedSize
+           matSort
+           [dataSource]="dataSource">
 
-        <ng-container matColumnDef="checkbox">
-            <th mat-header-cell *matHeaderCellDef>checkbox</th>
-            <td mat-cell *matCellDef="let element">
-                <mat-checkbox [checked]="element.check" (change)="element.check = $event.checked"></mat-checkbox>
-                <ng-container *ngIf="element.check">bau</ng-container>
-            </td>
-            <td mat-footer-cell *matFooterCellDef>c f</td>
+    <ng-container matColumnDef="checkbox">
+        <mat-header-cell *matHeaderCellDef>checkbox</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+            <mat-checkbox [checked]="element.check" (change)="element.check = $event.checked"></mat-checkbox>
+            <ng-container *ngIf="element.check">bau</ng-container>
+        </mat-cell>
+        <mat-footer-cell *matFooterCellDef>c f</mat-footer-cell>
+    </ng-container>
+
+    <ng-container *ngFor="let i of columnProcess(columnCount)">
+        <ng-container [matColumnDef]="'column' + i">
+            <mat-header-cell mat-sort-header
+                    *matHeaderCellDef>Column {{i}}</mat-header-cell>
+            <mat-cell
+                    *matCellDef="let element">{{element['column' + i]}}</mat-cell>
+            <mat-footer-cell
+                    *matFooterCellDef>Footer {{i}}</mat-footer-cell>
         </ng-container>
+    </ng-container>
 
-        <ng-container *ngFor="let i of columnProcess(columnCount)">
-            <ng-container [matColumnDef]="'column' + i">
-                <th mat-header-cell
-                    isx-column-drag-header
-                    isx-column-resize-header [style.width.px]="100"
-                    *matHeaderCellDef>Column {{i}}</th>
-                <td mat-cell
-                    isx-column-drag-cell
-                    isx-column-resize-cell [style.width.px]="100"
-                    *matCellDef="let element">{{element['column' + i]}}</td>
-                <td mat-footer-cell *matFooterCellDef>Footer {{i}}</td>
-            </ng-container>
-        </ng-container>
+    <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    <mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></mat-footer-row>
+</mat-table>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height: 20px"></tr>
-        <tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
-    </table>
-</cdk-virtual-scroll-viewport>
+<button (click)="tvs.scrollIntoView(dataSource.data[283])">ScrollIntoView</button>

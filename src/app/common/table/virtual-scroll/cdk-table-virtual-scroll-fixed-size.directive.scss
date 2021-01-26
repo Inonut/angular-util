@@ -1,0 +1,29 @@
+.cdk-table-virtual-scroll {
+    overflow: hidden;
+    position: relative;
+    display: flex;
+
+    .mat-table {
+        overflow: auto;
+        flex: 1;
+        height: 100%;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    .scrollable {
+        position: sticky;
+        flex-shrink: 0;
+        top: 0;
+        right: 0;
+        height: 100%;
+        width: 20px;
+        overflow: auto;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+}
