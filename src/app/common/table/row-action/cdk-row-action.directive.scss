@@ -1,0 +1,52 @@
+.mat-row.cdk-row-action {
+    position: relative;
+
+    &:hover {
+        .cdk-table-actions-show-container {
+            display: flex;
+            right: initial;
+            position: absolute;
+            transform: translateX(var(--row-actions-translate-x));
+            background: linear-gradient(90deg, rgba(white, 0) 0, white 15%, white 85%, rgba(white, 0));
+        }
+    }
+
+    .cdk-table-actions-show-container {
+        display: none;
+        position: absolute;
+        flex: 1;
+        justify-content: flex-end;
+        height: calc(100% - 2px);
+        align-self: center;
+        z-index: 1;
+
+        .cdk-table-actions-show {
+            display: flex;
+            align-items: center;
+            height: calc(100% - 2px);
+            right: 0;
+            padding: 0 48px;
+            white-space: nowrap;
+
+            .cdk-table-action-btn {
+                width: 26px;
+                height: 100%;
+
+                color: lightgray;
+                &[disabled] {
+                    &[disabled] {
+                        color: lightgray;
+                        opacity: 0.2;
+                    }
+                }
+                .mat-icon {
+                    font-size: 16px;
+
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+            }
+        }
+    }
+}

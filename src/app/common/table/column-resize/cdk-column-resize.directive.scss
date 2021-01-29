@@ -1,0 +1,40 @@
+.mat-table.cdk-table-resize {
+    .mat-header-row,
+    .mat-row,
+    .mat-footer-row {
+        .mat-header-cell,
+        .mat-cell,
+        .mat-footer-cell {
+            flex: initial;
+            min-width: 10px;
+            &.cdk-resize-column {
+                pointer-events: none;
+            }
+        }
+    }
+
+    .mat-header-row {
+        .mat-header-cell {
+            position: relative;
+
+            .resize-column-icon {
+                position: absolute;
+                right: -3px;
+                top: 0;
+                width: 9px;
+                height: 100%;
+                cursor: ew-resize;
+                z-index: 9999;
+
+                &:after {
+                    content: "";
+                    background: rgba(0, 0, 0, .12);
+                    position: absolute;
+                    height: 100%;
+                    width: 3px;
+                    right: 3px;
+                }
+            }
+        }
+    }
+}

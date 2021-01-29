@@ -6,17 +6,18 @@ import {AppComponent} from './app.component';
 import {AppInputSpinnerDirective} from './common/input-spinner/app-input-spinner.directive';
 import {AppTabDragDirective} from './common/tab-drag/app-tab-drag.directive';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {IsxColumnDragHeaderDirective} from "./common/table/column-drag/isx-column-drag-header.directive";
-import {IsxColumnDragCellDirective} from "./common/table/column-drag/isx-column-drag-cell.directive";
-import {IsxColumnDragDirective} from "./common/table/column-drag/isx-column-drag.directive";
-import {IsxColumnResizeCellDirective} from "./common/table/column-resize/isx-column-resize-cell.directive";
-import {IsxColumnResizeDirective} from "./common/table/column-resize/isx-column-resize.directive";
-import {IsxColumnResizeHeaderDirective} from "./common/table/column-resize/isx-column-resize-header.directive";
+import {CdkColumnDragHeaderDirective} from "./common/table/column-drag/cdk-column-drag-header.directive";
+import {CdkColumnDragCellDirective} from "./common/table/column-drag/cdk-column-drag-cell.directive";
+import {CdkColumnDragDirective} from "./common/table/column-drag/cdk-column-drag.directive";
+import {CdkColumnResizeCellDirective} from "./common/table/column-resize/cdk-column-resize-cell.directive";
+import {CdkColumnResizeDirective} from "./common/table/column-resize/cdk-column-resize.directive";
+import {CdkColumnResizeHeaderDirective} from "./common/table/column-resize/cdk-column-resize-header.directive";
 import {CdkTableVirtualScrollFixedSizeDirective} from "./common/table/virtual-scroll/cdk-table-virtual-scroll-fixed-size.directive";
 import {MatNativeDateModule} from "@angular/material/core";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import {DemoMaterialModule} from "./material-module";
+import {CdkRowActionDirective} from "./common/table/row-action/cdk-row-action.directive";
 
 @NgModule({
     declarations: [
@@ -24,15 +25,17 @@ import {DemoMaterialModule} from "./material-module";
         AppInputSpinnerDirective,
         AppTabDragDirective,
 
-        IsxColumnDragHeaderDirective,
-        IsxColumnDragCellDirective,
-        IsxColumnDragDirective,
+        CdkColumnDragHeaderDirective,
+        CdkColumnDragCellDirective,
+        CdkColumnDragDirective,
 
-        IsxColumnResizeHeaderDirective,
-        IsxColumnResizeCellDirective,
-        IsxColumnResizeDirective,
+        CdkColumnResizeHeaderDirective,
+        CdkColumnResizeCellDirective,
+        CdkColumnResizeDirective,
 
         CdkTableVirtualScrollFixedSizeDirective,
+
+        CdkRowActionDirective
     ],
     imports: [
         BrowserModule,

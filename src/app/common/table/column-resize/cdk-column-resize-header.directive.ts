@@ -1,15 +1,15 @@
 import {Directive, Input, OnDestroy, OnInit} from '@angular/core';
-import {IsxColumnResizeCellDirective} from './isx-column-resize-cell.directive';
+import {CdkColumnResizeCellDirective} from './cdk-column-resize-cell.directive';
 
 @Directive({
-    selector: `[isx-column-resize-header]`,
-    exportAs: 'isxColumnResizeHeader',
+    selector: `[cdk-column-resize-header]`,
+    exportAs: 'cdkColumnResizeHeader',
 })
-export class IsxColumnResizeHeaderDirective extends IsxColumnResizeCellDirective implements OnInit, OnDestroy {
+export class CdkColumnResizeHeaderDirective extends CdkColumnResizeCellDirective implements OnInit, OnDestroy {
 
     private hammerEl: HammerManager;
 
-    @Input('isx-column-resize-header')
+    @Input('cdk-column-resize-header')
     set columnName(name: string) {
         this.name = name || this.matColumnDef.name;
     }
@@ -25,15 +25,15 @@ export class IsxColumnResizeHeaderDirective extends IsxColumnResizeCellDirective
             this.hammerEl = new Hammer(resizeEl);
             let initsize = 0;
             this.hammerEl.on("panstart", (event) => initsize = this.el.nativeElement.clientWidth);
-            this.hammerEl.on("panleft", (event) => this.isxColumnResizeDirective.resizeStream.next({
+            this.hammerEl.on("panleft", (event) => this.columnResizeDirective.resizeStream.next({
                 size: this.getPanLeftSize(event.deltaX, initsize),
                 name: this.name
             }));
-            this.hammerEl.on("panright", (event) => this.isxColumnResizeDirective.resizeStream.next({
+            this.hammerEl.on("panright", (event) => this.columnResizeDirective.resizeStream.next({
                 size: this.getPanRightSize(event.deltaX, initsize),
                 name: this.name
             }));
-            this.hammerEl.on("panend", (event) => this.isxColumnResizeDirective.endResizeStream.next({
+            this.hammerEl.on("panend", (event) => this.columnResizeDirective.endResizeStream.next({
                 size: this.getPanEndSize(event.deltaX, initsize),
                 name: this.name
             }));

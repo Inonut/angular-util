@@ -13,8 +13,10 @@ import {MatSort} from "@angular/material/sort";
     }
 })
 export class AppComponent {
-    dataSource = null;
+    data: any = [];
+    dataSource: MatTableDataSource<any>;
     displayedColumns = [];
+    sizeColumns = {};
     rowCount = 500;
     columnCount = 20;
 
@@ -29,12 +31,14 @@ export class AppComponent {
                 height: Math.random() * 200
             });
             for (let j = 1; j < this.columnCount; j++) {
-                data[data.length - 1]['column' + j] = 'column' + j;
+                data[data.length - 1]['column' + j] = Math.floor(Math.random() * 1000);
             }
         }
 
-        this.dataSource = new MatTableDataSource(data);
+        this.dataSource = new MatTableDataSource(data.slice(0, 100));
         this.displayedColumns = ['checkbox'].concat(Object.keys(data[0])).filter(el => !['height'].includes(el));
+        this.displayedColumns.forEach(el => this.sizeColumns[el] = 50);
+        this.data = data;
     }
 
     ngAfterViewInit() {
@@ -45,12 +49,14 @@ export class AppComponent {
         return [...Array(columnCount).keys()];
     }
 
-    console($event: WheelEvent, table: MatTable<any>) {
-        // table['_elementRef'].nativeElement.scrollTop += $event.deltaY;
-        table['_elementRef'].nativeElement.scrollBy({
-            top: $event.deltaY,
-            behavior: 'smooth'
-        });
+    console(a, b) {
+        console.log(this.dataSource);
+    }
+
+    addNextData(index: number) {
+        if(index % 100 > 30 && this.dataSource.data.length - index < 100) {
+            this.dataSource.data = this.dataSource.data.concat(this.data.slice(Math.floor(index / 100 + 1) * 100, Math.floor(index / 100 + 2) * 100));
+        }
     }
 }
 

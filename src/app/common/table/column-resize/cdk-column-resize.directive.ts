@@ -3,13 +3,13 @@ import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
 @Directive({
-    selector: `[isxColumnResize]`,
-    exportAs: 'isxColumnResize',
+    selector: `[cdkColumnResize]`,
+    exportAs: 'cdkColumnResize',
     host: {
-        'class': 'isx-table-resize'
+        'class': 'cdk-table-resize'
     }
 })
-export class IsxColumnResizeDirective implements OnInit, OnDestroy {
+export class CdkColumnResizeDirective implements OnInit, OnDestroy {
     resizeStream = new Subject();
     endResizeStream = new Subject();
     @Output() resize = new EventEmitter();

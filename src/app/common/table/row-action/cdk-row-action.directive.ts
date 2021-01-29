@@ -14,18 +14,18 @@ import {
 } from '@angular/core';
 import {fromEvent, Subject} from 'rxjs';
 import {CdkPortal, CdkPortalOutlet} from '@angular/cdk/portal';
-import {takeUntil} from 'rxjs/operators';
+import {debounceTime, takeUntil, tap} from 'rxjs/operators';
 import {MatSort} from "@angular/material/sort";
 import {MatTable} from "@angular/material/table";
 
 @Directive({
-    selector: `[isx-row-action]`,
-    exportAs: 'isxRowAction',
+    selector: `[cdk-row-action]`,
+    exportAs: 'cdkRowAction',
     host: {
-        'class': 'isx-row-action'
+        'class': 'cdk-row-action'
     }
 })
-export class IsxRowActionDirective implements AfterContentInit, OnDestroy {
+export class CdkRowActionDirective implements AfterContentInit, OnDestroy {
     @ContentChild(CdkPortal, {static: true}) cdkPortal: CdkPortal;
     @Input() allowMouseFollow = true;
     @Input() offset = 30;
@@ -67,9 +67,14 @@ export class IsxRowActionDirective implements AfterContentInit, OnDestroy {
         });
 
         this.matSort && this.matSort.sortChange
-            .pipe(takeUntil(this.unsubscribe))
+            .pipe(
+                takeUntil(this.unsubscribe),
+                tap(() => viewRef.rootNodes[0].classList.add('hidden')),
+                debounceTime(10)
+            )
             .subscribe(() => {
                 this.renderer.appendChild(this.el.nativeElement, viewRef.rootNodes[0]);
+                viewRef.rootNodes[0].classList.remove('hidden');
             });
 
         viewRef.detectChanges();

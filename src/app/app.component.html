@@ -1,30 +1,47 @@
-<mat-table cdk-table-virtual-scroll-fixed-size #tvs=cdkTableVirtualScrollFixedSize
+<mat-table [cdk-table-virtual-scroll-fixed-size]="20" (indexChanged)="addNextData($event)" #tvs=cdkTableVirtualScrollFixedSize
            matSort
+           cdkColumnResize (resize)="sizeColumns[$event.name] = $event.size"
+           [cdkColumnDrag]="displayedColumns" (drop)="displayedColumns = $event.columns;"
            [dataSource]="dataSource">
 
     <ng-container matColumnDef="checkbox">
-        <mat-header-cell *matHeaderCellDef>checkbox</mat-header-cell>
-        <mat-cell *matCellDef="let element">
+        <mat-header-cell *matHeaderCellDef [style.width.px]="sizeColumns['checkbox']">checkbox</mat-header-cell>
+        <mat-cell *matCellDef="let element" [style.width.px]="sizeColumns['checkbox']">
             <mat-checkbox [checked]="element.check" (change)="element.check = $event.checked"></mat-checkbox>
             <ng-container *ngIf="element.check">bau</ng-container>
         </mat-cell>
-        <mat-footer-cell *matFooterCellDef>c f</mat-footer-cell>
+        <mat-footer-cell *matFooterCellDef [style.width.px]="sizeColumns['checkbox']">c f</mat-footer-cell>
     </ng-container>
 
     <ng-container *ngFor="let i of columnProcess(columnCount)">
         <ng-container [matColumnDef]="'column' + i">
             <mat-header-cell mat-sort-header
+                             cdk-column-drag-header
+                             cdk-column-resize-header [style.width.px]="sizeColumns['column' + i]"
                     *matHeaderCellDef>Column {{i}}</mat-header-cell>
             <mat-cell
+                    cdk-column-drag-cell
+                    cdk-column-resize-cell [style.width.px]="sizeColumns['column' + i]"
                     *matCellDef="let element">{{element['column' + i]}}</mat-cell>
             <mat-footer-cell
+                    cdk-column-drag-cell
+                    cdk-column-resize-cell [style.width.px]="sizeColumns['column' + i]"
                     *matFooterCellDef>Footer {{i}}</mat-footer-cell>
         </ng-container>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+<!--    <mat-row *matRowDef="let row; columns: displayedColumns;" [style.height.px]="row.height" cdk-row-action>-->
+    <mat-row *matRowDef="let row; columns: displayedColumns;" cdk-row-action>
+        <ng-template cdkPortal>
+            <div class="cdk-table-actions-show-container">
+                <div class="cdk-table-actions-show">
+                    asd
+                </div>
+            </div>
+        </ng-template>
+    </mat-row>
     <mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></mat-footer-row>
 </mat-table>
 
-<button (click)="tvs.scrollIntoView(dataSource.data[283])">ScrollIntoView</button>
+<button (click)="tvs.scrollIntoView(dataSource.data[283]); console(1, 2)">ScrollIntoView</button>

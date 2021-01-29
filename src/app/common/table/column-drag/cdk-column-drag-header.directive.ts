@@ -1,15 +1,15 @@
 import {Directive, Input, OnDestroy, OnInit} from '@angular/core';
-import {IsxColumnDragCellDirective} from './isx-column-drag-cell.directive';
+import {CdkColumnDragCellDirective} from './cdk-column-drag-cell.directive';
 
 @Directive({
-    selector: `[isx-column-drag-header]`,
-    exportAs: 'isxColumnDragHeader',
+    selector: `[cdk-column-drag-header]`,
+    exportAs: 'cdkColumnDragHeader',
 })
-export class IsxColumnDragHeaderDirective extends IsxColumnDragCellDirective implements OnInit, OnDestroy {
+export class CdkColumnDragHeaderDirective extends CdkColumnDragCellDirective implements OnInit, OnDestroy {
 
     private hammerEl: HammerManager;
 
-    @Input('isx-column-drag-header')
+    @Input('cdk-column-drag-header')
     set columnName(name: string) {
         this.name = name || this.matColumnDef.name;
     }
@@ -24,19 +24,19 @@ export class IsxColumnDragHeaderDirective extends IsxColumnDragCellDirective imp
 
         this.ngZone.runOutsideAngular(() => {
             this.hammerEl = new Hammer(dragContainer);
-            this.hammerEl.on("panstart", (event) => this.isxColumnDragDirective.startDragStream.next({
+            this.hammerEl.on("panstart", (event) => this.columnDragDirective.startDragStream.next({
                 event,
                 name: this.name
             }));
-            this.hammerEl.on("panleft", (event) => this.isxColumnDragDirective.leftDragStream.next({
+            this.hammerEl.on("panleft", (event) => this.columnDragDirective.leftDragStream.next({
                 event,
                 name: this.name
             }));
-            this.hammerEl.on("panright", (event) => this.isxColumnDragDirective.rightDragStream.next({
+            this.hammerEl.on("panright", (event) => this.columnDragDirective.rightDragStream.next({
                 event,
                 name: this.name
             }));
-            this.hammerEl.on("panend", (event) => this.isxColumnDragDirective.dropStream.next({
+            this.hammerEl.on("panend", (event) => this.columnDragDirective.dropStream.next({
                 event,
                 name: this.name
             }));

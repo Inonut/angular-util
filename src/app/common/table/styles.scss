@@ -1,1 +1,8 @@
+.hidden {
+  display: none !important;
+}
+
 @import "src/app/common/table/virtual-scroll/cdk-table-virtual-scroll-fixed-size.directive";
+@import "src/app/common/table/row-action/cdk-row-action.directive";
+@import "src/app/common/table/column-drag/cdk-column-drag.directive";
+@import "src/app/common/table/column-resize/cdk-column-resize.directive";
