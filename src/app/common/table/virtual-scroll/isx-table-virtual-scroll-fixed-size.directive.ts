@@ -34,7 +34,7 @@ export class IsxTableVirtualScrollFixedSizeDirective<T> implements AfterContentI
     private readyStream = new Subject();
 
     @Input() buffer: number = -1;
-    @Input('cdk-table-virtual-scroll-fixed-size') defaultRowHeight = 20;
+    @Input('isx-table-virtual-scroll-fixed-size') defaultRowHeight = 20;
 
     @Output() indexChanged = new EventEmitter();
 
