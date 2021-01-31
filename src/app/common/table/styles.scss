@@ -2,7 +2,13 @@
   display: none !important;
 }
 
-@import "src/app/common/table/virtual-scroll/cdk-table-virtual-scroll-fixed-size.directive";
-@import "src/app/common/table/row-action/cdk-row-action.directive";
-@import "src/app/common/table/column-drag/cdk-column-drag.directive";
-@import "src/app/common/table/column-resize/cdk-column-resize.directive";
+@import "src/app/common/table/virtual-scroll/isx-table-virtual-scroll-fixed-size.directive";
+@import "src/app/common/table/row-action/isx-row-action.directive";
+@import "src/app/common/table/column-drag/isx-column-drag.directive";
+@import "src/app/common/table/column-resize/isx-column-resize.directive";
+@import "src/app/common/table/message/isx-table-message.directive";
+
+.isx-table-components {
+  display: flex;
+  flex-direction: column;
+}

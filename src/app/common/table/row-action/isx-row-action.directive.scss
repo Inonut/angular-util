@@ -1,8 +1,8 @@
-.mat-row.cdk-row-action {
+.mat-row.isx-row-action {
     position: relative;
 
     &:hover {
-        .cdk-table-actions-show-container {
+        .isx-table-actions-show-container {
             display: flex;
             right: initial;
             position: absolute;
@@ -11,7 +11,7 @@
         }
     }
 
-    .cdk-table-actions-show-container {
+    .isx-table-actions-show-container {
         display: none;
         position: absolute;
         flex: 1;
@@ -20,7 +20,7 @@
         align-self: center;
         z-index: 1;
 
-        .cdk-table-actions-show {
+        .isx-table-actions-show {
             display: flex;
             align-items: center;
             height: calc(100% - 2px);
@@ -28,7 +28,7 @@
             padding: 0 48px;
             white-space: nowrap;
 
-            .cdk-table-action-btn {
+            .isx-table-action-btn {
                 width: 26px;
                 height: 100%;
 

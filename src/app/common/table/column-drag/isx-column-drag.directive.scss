@@ -1,4 +1,4 @@
-.mat-table.cdk-table-drag-and-drop {
+.mat-table.isx-table-drag-and-drop {
     .mat-header-row,
     .mat-row {
         display: flex;
@@ -11,7 +11,7 @@
     }
 }
 
-.cdk-table-drag-and-drop {
+.isx-table-drag-and-drop {
     .drag-column-container {
         display: flex;
         align-items: center;
@@ -21,12 +21,13 @@
     }
 
     .mat-header-cell,
-    .mat-cell {
-        &.cdk-drag-column {
+    .mat-cell,
+    .isx-cell {
+        &.isx-drag-column {
             pointer-events: none;
             z-index: 1;
         }
-        &:not(.cdk-drag-column) {
+        &:not(.isx-drag-column) {
             transition: var(--drag-and-drop-transition, transform) 0.5s ease;
         }
     }

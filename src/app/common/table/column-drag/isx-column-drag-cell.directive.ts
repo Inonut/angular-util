@@ -9,26 +9,26 @@ import {
     Renderer2
 } from '@angular/core';
 import {merge, Subject} from 'rxjs';
-import {CdkColumnDragDirective} from './cdk-column-drag.directive';
+import {IsxColumnDragDirective} from './isx-column-drag.directive';
 import { MatColumnDef } from '@angular/material/table';
 import {filter, takeUntil} from 'rxjs/operators';
 
 @Directive({
-    selector: `[cdk-column-drag-cell]`,
-    exportAs: 'cdkColumnDragCell',
+    selector: `[isx-column-drag-cell]`,
+    exportAs: 'isxColumnDragCell',
 })
-export class CdkColumnDragCellDirective implements OnInit, OnDestroy {
+export class IsxColumnDragCellDirective implements OnInit, OnDestroy {
     name: string;
     protected unsubscribe = new Subject();
 
-    constructor(@Optional() protected columnDragDirective: CdkColumnDragDirective,
+    constructor(@Optional() protected columnDragDirective: IsxColumnDragDirective,
                 @Optional() public matColumnDef: MatColumnDef,
                 public el: ElementRef,
                 public renderer: Renderer2,
                 protected ngZone: NgZone) {
     }
 
-    @Input('cdk-column-drag-cell')
+    @Input('isx-column-drag-cell')
     set columnName(name: string) {
         this.name = name || this.matColumnDef.name;
     }
@@ -43,7 +43,7 @@ export class CdkColumnDragCellDirective implements OnInit, OnDestroy {
                     filter(({name, event}) => name == this.name)
                 )
                 .subscribe(({event}) => {
-                    this.renderer.addClass(this.el.nativeElement, "cdk-drag-column");
+                    this.renderer.addClass(this.el.nativeElement, "isx-drag-column");
                     this.moveTo(event.deltaX);
                 });
 
@@ -52,7 +52,7 @@ export class CdkColumnDragCellDirective implements OnInit, OnDestroy {
                     takeUntil(this.unsubscribe),
                     filter(({name, event}) => name == this.name)
                 )
-                .subscribe(({event}) => this.renderer.removeClass(this.el.nativeElement, "cdk-drag-column"));
+                .subscribe(({event}) => this.renderer.removeClass(this.el.nativeElement, "isx-drag-column"));
         });
 
         this.moveTo(0);

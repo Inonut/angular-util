@@ -10,24 +10,24 @@ import {
     Output
 } from '@angular/core';
 import {Subject} from 'rxjs';
-import {CdkColumnDragCellDirective} from './cdk-column-drag-cell.directive';
+import {IsxColumnDragCellDirective} from './isx-column-drag-cell.directive';
 import {takeUntil} from 'rxjs/operators';
 
 @Directive({
-    selector: `[cdkColumnDrag]`,
-    exportAs: 'cdkColumnDrag',
+    selector: `[isxColumnDrag]`,
+    exportAs: 'isxColumnDrag',
     host: {
-        'class': 'cdk-table-drag-and-drop'
+        'class': 'isx-table-drag-and-drop'
     }
 })
-export class CdkColumnDragDirective implements OnInit, OnDestroy {
+export class IsxColumnDragDirective implements OnInit, OnDestroy {
     leftDragStream = new Subject();
     rightDragStream = new Subject();
     startDragStream = new Subject();
     dropStream = new Subject();
     @Output() drop = new EventEmitter();
     private unsubscribe = new Subject();
-    private columnsCache: { [name: string]: Array<CdkColumnDragCellDirective> } = {};
+    private columnsCache: { [name: string]: Array<IsxColumnDragCellDirective> } = {};
     private columnsGroup = 'all';
     private newOrder = [];
     private currentOrder: {[group: string]: string[]};
@@ -38,7 +38,7 @@ export class CdkColumnDragDirective implements OnInit, OnDestroy {
     }
 
     @Input()
-    set cdkColumnDrag(val: string[] | {[group: string]: string[]}) {
+    set isxColumnDrag(val: string[] | {[group: string]: string[]}) {
         if(val instanceof Array) {
             this.currentOrder = {
                 all: val
@@ -117,12 +117,12 @@ export class CdkColumnDragDirective implements OnInit, OnDestroy {
         this.unsubscribe.complete();
     }
 
-    add(directive: CdkColumnDragCellDirective) {
+    add(directive: IsxColumnDragCellDirective) {
         this.columnsCache[directive.name] = this.columnsCache[directive.name] || [];
         this.columnsCache[directive.name].push(directive);
     }
 
-    remove(directive: CdkColumnDragCellDirective) {
+    remove(directive: IsxColumnDragCellDirective) {
         this.columnsCache[directive.name] = this.columnsCache[directive.name] || [];
         this.columnsCache[directive.name].splice(this.columnsCache[directive.name].indexOf(directive), 1);
 

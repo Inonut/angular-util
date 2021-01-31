@@ -1,4 +1,4 @@
-.mat-table.cdk-table-resize {
+.mat-table.isx-table-resize {
     .mat-header-row,
     .mat-row,
     .mat-footer-row {
@@ -7,7 +7,7 @@
         .mat-footer-cell {
             flex: initial;
             min-width: 10px;
-            &.cdk-resize-column {
+            &.isx-resize-column {
                 pointer-events: none;
             }
         }

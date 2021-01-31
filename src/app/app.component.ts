@@ -36,7 +36,7 @@ export class AppComponent {
         }
 
         this.dataSource = new MatTableDataSource(data.slice(0, 100));
-        this.displayedColumns = ['checkbox'].concat(Object.keys(data[0])).filter(el => !['height'].includes(el));
+        this.displayedColumns = ['checkbox'].concat(new Array(this.columnCount).fill(1).map((el, i) => 'column' + i)).filter(el => !['height'].includes(el));
         this.displayedColumns.forEach(el => this.sizeColumns[el] = 50);
         this.data = data;
     }
@@ -54,7 +54,7 @@ export class AppComponent {
     }
 
     addNextData(index: number) {
-        if(index % 100 > 30 && this.dataSource.data.length - index < 100) {
+        if(index % 100 > 30 && this.dataSource.data.length - index < 100 && index < 400) {
             this.dataSource.data = this.dataSource.data.concat(this.data.slice(Math.floor(index / 100 + 1) * 100, Math.floor(index / 100 + 2) * 100));
         }
     }

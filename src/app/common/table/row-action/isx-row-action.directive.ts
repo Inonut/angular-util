@@ -19,13 +19,13 @@ import {MatSort} from "@angular/material/sort";
 import {MatTable} from "@angular/material/table";
 
 @Directive({
-    selector: `[cdk-row-action]`,
-    exportAs: 'cdkRowAction',
+    selector: `[isx-row-action]`,
+    exportAs: 'isxRowAction',
     host: {
-        'class': 'cdk-row-action'
+        'class': 'isx-row-action'
     }
 })
-export class CdkRowActionDirective implements AfterContentInit, OnDestroy {
+export class IsxRowActionDirective implements AfterContentInit, OnDestroy {
     @ContentChild(CdkPortal, {static: true}) cdkPortal: CdkPortal;
     @Input() allowMouseFollow = true;
     @Input() offset = 30;

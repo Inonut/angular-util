@@ -1,0 +1,13 @@
+.mat-table.isx-table-message {
+    position: relative;
+
+    .isx-message-placeholder {
+        position: absolute;
+        z-index: 1;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        top: 200px;
+        font-size: 16px;
+    }
+}

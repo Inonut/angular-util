@@ -10,7 +10,8 @@
     height: 300px;
 }
 
-table {
+.mat-table {
+    height: 100%;
     width: 100%;
 }
 
@@ -22,4 +23,8 @@ table {
 .mat-row {
     height: 20px;
     min-height: 20px;
+}
+
+.isx-table-virtual-scroll {
+    height: 100%;
 }

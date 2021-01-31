@@ -1,15 +1,15 @@
 import {Directive, Input, OnDestroy, OnInit} from '@angular/core';
-import {CdkColumnDragCellDirective} from './cdk-column-drag-cell.directive';
+import {IsxColumnDragCellDirective} from './isx-column-drag-cell.directive';
 
 @Directive({
-    selector: `[cdk-column-drag-header]`,
-    exportAs: 'cdkColumnDragHeader',
+    selector: `[isx-column-drag-header]`,
+    exportAs: 'isxColumnDragHeader',
 })
-export class CdkColumnDragHeaderDirective extends CdkColumnDragCellDirective implements OnInit, OnDestroy {
+export class IsxColumnDragHeaderDirective extends IsxColumnDragCellDirective implements OnInit, OnDestroy {
 
     private hammerEl: HammerManager;
 
-    @Input('cdk-column-drag-header')
+    @Input('isx-column-drag-header')
     set columnName(name: string) {
         this.name = name || this.matColumnDef.name;
     }

@@ -1,16 +1,27 @@
-import {AfterContentInit, Directive, ElementRef, EventEmitter, Host, Input, OnDestroy, Output, Renderer2} from "@angular/core";
+import {
+    AfterContentInit,
+    Directive,
+    ElementRef,
+    EventEmitter,
+    Host,
+    Input,
+    OnDestroy,
+    Output,
+    Renderer2
+} from "@angular/core";
 import {MatTable} from "@angular/material/table";
 import {EMPTY, fromEvent, isObservable, Observable, of, Subject, timer} from "rxjs";
-import {debounceTime, map, startWith, switchMap, takeUntil, tap} from "rxjs/operators";
+import {debounceTime, filter, startWith, switchMap, take, takeUntil, tap} from "rxjs/operators";
 import {isDataSource} from "@angular/cdk/collections";
+import {findParentWithClasses} from "../../utilities";
 
 @Directive({
-    selector: '[cdk-table-virtual-scroll-fixed-size]',
-    exportAs: 'cdkTableVirtualScrollFixedSize'
+    selector: '[isx-table-virtual-scroll-fixed-size]',
+    exportAs: 'isxTableVirtualScrollFixedSize'
 })
-export class CdkTableVirtualScrollFixedSizeDirective<T> implements AfterContentInit, OnDestroy {
+export class IsxTableVirtualScrollFixedSizeDirective<T> implements AfterContentInit, OnDestroy {
     private unsubscribe = new Subject();
-    private readonly datasetIndex = 'cdkindex';
+    private readonly datasetIndex = 'isxindex';
     private cacheData: T[] | readonly T[] = [];
     private index = 0;
 
@@ -19,11 +30,11 @@ export class CdkTableVirtualScrollFixedSizeDirective<T> implements AfterContentI
     private containerEl: any;
 
     private renderRowsStream = new Subject();
-    private connectScrollBarStream = new Subject();
     private preventScrollBarStream = new Subject();
+    private readyStream = new Subject();
 
     @Input() buffer: number = -1;
-    @Input('cdk-table-virtual-scroll-fixed-size') defaultRowHeight = 30;
+    @Input('cdk-table-virtual-scroll-fixed-size') defaultRowHeight = 20;
 
     @Output() indexChanged = new EventEmitter();
 
@@ -31,8 +42,9 @@ export class CdkTableVirtualScrollFixedSizeDirective<T> implements AfterContentI
                 private renderer: Renderer2,
                 @Host() private table: MatTable<T>) {
 
+        this.renderer.setAttribute(this.tableEl.nativeElement, 'tabindex', '-1');
         this.containerEl = this.renderer.createElement('div');
-        this.renderer.addClass(this.containerEl, 'cdk-table-virtual-scroll');
+        this.renderer.addClass(this.containerEl, 'isx-table-virtual-scroll');
         this.renderer.insertBefore(this.tableEl.nativeElement.parentElement, this.containerEl, this.tableEl.nativeElement);
         this.renderer.appendChild(this.containerEl, this.tableEl.nativeElement);
         this.fakeContainerScrollEl = this.renderer.createElement('div');
@@ -49,9 +61,7 @@ export class CdkTableVirtualScrollFixedSizeDirective<T> implements AfterContentI
                 this._data = that.cacheData.slice(start, end);
                 oldRenderRows.bind(this)();
 
-                setTimeout(() => {
-                    [...that.tableEl.nativeElement.children].filter(el => el.classList.contains('mat-row')).forEach((el, i) => el.dataset[that.datasetIndex] = start + i);
-                });
+                setTimeout(() => that.readyStream.next());
             }
             let interval = that.processStartAndEnd();
             render(interval.start, interval.end);
@@ -74,21 +84,25 @@ export class CdkTableVirtualScrollFixedSizeDirective<T> implements AfterContentI
                 dataStream = of(this.dataSource);
             }
 
-            this._renderChangeSubscription = dataStream.pipe(takeUntil(this._onDestroy))
+            dataStream
+                .pipe(
+                    takeUntil(this._onDestroy),
+                    switchMap((data) => {
+                        that.cacheData = data;
+                        that.renderer.setStyle(that.fakeScrollEl, 'height', that.processScrollHeight() + 'px');
+                        return that.readyStream.pipe(take(1));
+                    }),
+                    takeUntil(this._onDestroy),
+                )
                 .subscribe(data => {
-                    that.cacheData = data;
-                    that.renderer.setStyle(that.fakeScrollEl, 'height', that.processScrollHeight() + 'px');
-
                     that.preventScrollBarStream.next();
-                    setTimeout(() => {
-                        that.syncHiddenScroll();
-                        that.syncVisibleScroll();
-                    }, 500);
+                    that.syncHiddenScroll();
+                    that.syncVisibleScroll();
                 });
 
             oldObserveRenderChanges.bind(this)();
 
-            this.renderRows();
+            setTimeout(() => this.renderRows());
         }
     }
 
@@ -101,43 +115,51 @@ export class CdkTableVirtualScrollFixedSizeDirective<T> implements AfterContentI
 
         fromEvent(this.tableEl.nativeElement, 'wheel')
             .pipe(
-                map((ev: WheelEvent) => ev.deltaY),
-                tap((deltaY) => {
-
+                tap((ev: WheelEvent) => {
+                    let deltaY = ev.deltaY;
                     let rowHeight = this.processRowHeight();
-                    let index = this.index + Math.sign(deltaY) * Math.max(Math.abs(deltaY), rowHeight) / rowHeight
-                    if (index < 0) {
-                        index = 0;
-                    }
-
-                    let containerHeight = this.computeTableRealHeight();
-                    if (index > this.cacheData.length - containerHeight / rowHeight) {
-                        index = this.cacheData.length - containerHeight / rowHeight + 1;
-                    }
-
-                    this.setIndex(Math.floor(index));
-
-                    if (this.tableEl.nativeElement.scrollTop == 0 && this.processStartAndEnd().start > 0) {
-                        this.tableEl.nativeElement.scrollTop += this.processRowHeight();
-                    }
-                    if (this.tableEl.nativeElement.scrollTop + this.tableEl.nativeElement.clientHeight > this.tableEl.nativeElement.scrollHeight - 1 && this.processStartAndEnd().end < this.cacheData.length - 1) {
-                        this.tableEl.nativeElement.scrollTop -= this.processRowHeight();
-                    }
-
-                    this.renderRowsStream.next();
+                    this.setIndex(this.index + Math.sign(deltaY) * Math.max(Math.abs(deltaY), rowHeight) / rowHeight);
                 }),
                 takeUntil(this.unsubscribe),
-                switchMap(() => fromEvent(this.tableEl.nativeElement, 'scroll').pipe(takeUntil(timer(300)), tap(() => this.connectScrollBarStream.next()))),
+                switchMap(() => {
+                    return this.readyStream.pipe(takeUntil(timer(300)))
+                }),
                 takeUntil(this.unsubscribe),
             )
             .subscribe(() => {
                 this.preventScrollBarStream.next();
-                this.syncVisibleScroll()
+                this.syncVisibleScroll();
             });
+
+        fromEvent(window, 'keydown')
+            .pipe(
+                filter((ev: KeyboardEvent) => findParentWithClasses(document.activeElement, 'mat-table') == this.tableEl.nativeElement),
+                takeUntil(this.unsubscribe),
+                switchMap((ev: KeyboardEvent) => {
+                    if(ev.key == 'PageDown' || ev.key == 'PageUp') {
+                        ev.preventDefault();
+                        let rowHeight = this.processRowHeight();
+                        let containerHeight = this.computeTableRealHeight();
+                        let sign = (ev.key == 'PageDown' ? 1 : -1);
+                        this.setIndex(this.index + containerHeight / rowHeight * sign);
+
+                        return this.readyStream;
+                    }
+
+                    return EMPTY;
+                }),
+                takeUntil(this.unsubscribe),
+            )
+            .subscribe((ev: KeyboardEvent) => {
+                this.preventScrollBarStream.next();
+                this.syncHiddenScroll();
+                this.syncVisibleScroll();
+                this.tableEl.nativeElement.focus();
+            })
 
 
         let oldScrollTop = 0;
-        this.connectScrollBarStream
+        this.preventScrollBarStream
             .pipe(
                 takeUntil(this.unsubscribe),
                 debounceTime(300),
@@ -154,8 +176,7 @@ export class CdkTableVirtualScrollFixedSizeDirective<T> implements AfterContentI
 
                     if(this.index != index) {
                         this.setIndex(index);
-                        this.renderRowsStream.next();
-                        return of(null);
+                        return this.readyStream.pipe(takeUntil(this.preventScrollBarStream));
                     } else {
                         return EMPTY;
                     }
@@ -174,6 +195,13 @@ export class CdkTableVirtualScrollFixedSizeDirective<T> implements AfterContentI
             .subscribe(() => {
                 this.table.renderRows();
             });
+
+        this.readyStream
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe(() => {
+                let interval = this.processStartAndEnd();
+                [...this.tableEl.nativeElement.children].filter(el => el.classList.contains('mat-row')).forEach((el, i) => el.dataset[this.datasetIndex] = interval.start + i);
+            })
     }
 
     ngOnDestroy(): void {
@@ -186,18 +214,15 @@ export class CdkTableVirtualScrollFixedSizeDirective<T> implements AfterContentI
         let containerHeight = this.computeTableRealHeight();
 
         this.setIndex(Math.min(this.cacheData.indexOf(data), Math.floor(this.cacheData.length - containerHeight / rowHeight + 1)));
-        this.renderRowsStream.next();
 
-        this.preventScrollBarStream.next();
-
-        setTimeout(() => {
-            this.syncHiddenScroll();
-            this.syncVisibleScroll();
-        }, 150);
-
-        setTimeout(() => {
-            this.connectScrollBarStream.next();
-        }, 300);
+        this.readyStream
+            .pipe(take(1), takeUntil(this.unsubscribe))
+            .subscribe(() => {
+                this.preventScrollBarStream.next();
+                this.syncHiddenScroll();
+                this.syncVisibleScroll();
+                this.tableEl.nativeElement.focus();
+            });
     }
 
     elementByData(data: T) {
@@ -205,7 +230,7 @@ export class CdkTableVirtualScrollFixedSizeDirective<T> implements AfterContentI
     }
 
     private processRowHeight() {
-        let elRows = [...this.containerEl.getElementsByClassName('cdk-row')];
+        let elRows = [...this.containerEl.getElementsByClassName('mat-row')];
         let rowHeight = this.defaultRowHeight;
 
         if (elRows.length != 0) {
@@ -253,18 +278,37 @@ export class CdkTableVirtualScrollFixedSizeDirective<T> implements AfterContentI
     }
 
     private syncVisibleScroll() {
-        this.fakeContainerScrollEl.scrollTop = (this.processStartAndEnd().start + [...this.tableEl.nativeElement.children].filter(el => el.classList.contains('mat-row') && el.dataset.cdkindex != 'null').findIndex(el => el.getBoundingClientRect().top >= this.processHeaderHeight())) * this.processRowHeight();
+        this.fakeContainerScrollEl.scrollTop = (this.processStartAndEnd().start + [...this.tableEl.nativeElement.children].filter(el => el.classList.contains('mat-row') && el.dataset[this.datasetIndex] != 'null').findIndex(el => el.getBoundingClientRect().top >= this.processHeaderHeight())) * this.processRowHeight();
     }
 
     private syncHiddenScroll() {
         let rowHeight = this.processRowHeight();
-        this.tableEl.nativeElement.scrollTop = [...this.tableEl.nativeElement.children].filter(el => el.classList.contains('mat-row')).findIndex(el => el.dataset.cdkindex == this.index) * rowHeight;
+        this.tableEl.nativeElement.scrollTop = [...this.tableEl.nativeElement.children].filter(el => el.classList.contains('mat-row')).findIndex(el => el.dataset[this.datasetIndex] == this.index) * rowHeight;
     }
 
     private setIndex(index) {
+        if (index < 0) {
+            index = 0;
+        }
+
+        let rowHeight = this.processRowHeight();
+        let containerHeight = this.computeTableRealHeight();
+        if (index > this.cacheData.length - containerHeight / rowHeight) {
+            index = this.cacheData.length - containerHeight / rowHeight + 1;
+        }
+
         if(this.index != index) {
-            this.index = index;
+            this.index = Math.floor(index);
             this.indexChanged.emit(this.index);
         }
+
+        if (this.tableEl.nativeElement.scrollTop == 0 && this.processStartAndEnd().start > 0) {
+            this.tableEl.nativeElement.scrollTop += this.processRowHeight();
+        }
+        if (this.tableEl.nativeElement.scrollTop + this.tableEl.nativeElement.clientHeight > this.tableEl.nativeElement.scrollHeight - 1 && this.processStartAndEnd().end < this.cacheData.length - 1) {
+            this.tableEl.nativeElement.scrollTop -= this.processRowHeight();
+        }
+
+        this.renderRowsStream.next();
     }
 }

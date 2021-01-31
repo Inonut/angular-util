@@ -1,9 +1,10 @@
-.cdk-table-virtual-scroll {
+.isx-table-virtual-scroll {
     overflow: hidden;
     position: relative;
     display: flex;
 
     .mat-table {
+        outline: none;
         overflow: auto;
         flex: 1;
         height: 100%;
@@ -19,7 +20,7 @@
         top: 0;
         right: 0;
         height: 100%;
-        width: 20px;
+        padding-left: 1px;
         overflow: auto;
     }
 }

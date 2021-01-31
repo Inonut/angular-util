@@ -6,18 +6,19 @@ import {AppComponent} from './app.component';
 import {AppInputSpinnerDirective} from './common/input-spinner/app-input-spinner.directive';
 import {AppTabDragDirective} from './common/tab-drag/app-tab-drag.directive';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {CdkColumnDragHeaderDirective} from "./common/table/column-drag/cdk-column-drag-header.directive";
-import {CdkColumnDragCellDirective} from "./common/table/column-drag/cdk-column-drag-cell.directive";
-import {CdkColumnDragDirective} from "./common/table/column-drag/cdk-column-drag.directive";
-import {CdkColumnResizeCellDirective} from "./common/table/column-resize/cdk-column-resize-cell.directive";
-import {CdkColumnResizeDirective} from "./common/table/column-resize/cdk-column-resize.directive";
-import {CdkColumnResizeHeaderDirective} from "./common/table/column-resize/cdk-column-resize-header.directive";
-import {CdkTableVirtualScrollFixedSizeDirective} from "./common/table/virtual-scroll/cdk-table-virtual-scroll-fixed-size.directive";
+import {IsxColumnDragHeaderDirective} from "./common/table/column-drag/isx-column-drag-header.directive";
+import {IsxColumnDragCellDirective} from "./common/table/column-drag/isx-column-drag-cell.directive";
+import {IsxColumnDragDirective} from "./common/table/column-drag/isx-column-drag.directive";
+import {IsxColumnResizeCellDirective} from "./common/table/column-resize/isx-column-resize-cell.directive";
+import {IsxColumnResizeDirective} from "./common/table/column-resize/isx-column-resize.directive";
+import {IsxColumnResizeHeaderDirective} from "./common/table/column-resize/isx-column-resize-header.directive";
+import {IsxTableVirtualScrollFixedSizeDirective} from "./common/table/virtual-scroll/isx-table-virtual-scroll-fixed-size.directive";
 import {MatNativeDateModule} from "@angular/material/core";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import {DemoMaterialModule} from "./material-module";
-import {CdkRowActionDirective} from "./common/table/row-action/cdk-row-action.directive";
+import {IsxRowActionDirective} from "./common/table/row-action/isx-row-action.directive";
+import {IsxTableMessageDirective} from "./common/table/message/isx-table-message.directive";
 
 @NgModule({
     declarations: [
@@ -25,17 +26,18 @@ import {CdkRowActionDirective} from "./common/table/row-action/cdk-row-action.di
         AppInputSpinnerDirective,
         AppTabDragDirective,
 
-        CdkColumnDragHeaderDirective,
-        CdkColumnDragCellDirective,
-        CdkColumnDragDirective,
+        IsxColumnDragHeaderDirective,
+        IsxColumnDragCellDirective,
+        IsxColumnDragDirective,
 
-        CdkColumnResizeHeaderDirective,
-        CdkColumnResizeCellDirective,
-        CdkColumnResizeDirective,
+        IsxColumnResizeHeaderDirective,
+        IsxColumnResizeCellDirective,
+        IsxColumnResizeDirective,
 
-        CdkTableVirtualScrollFixedSizeDirective,
+        IsxTableVirtualScrollFixedSizeDirective,
 
-        CdkRowActionDirective
+        IsxRowActionDirective,
+        IsxTableMessageDirective
     ],
     imports: [
         BrowserModule,

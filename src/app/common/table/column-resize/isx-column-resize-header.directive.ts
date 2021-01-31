@@ -1,15 +1,15 @@
 import {Directive, Input, OnDestroy, OnInit} from '@angular/core';
-import {CdkColumnResizeCellDirective} from './cdk-column-resize-cell.directive';
+import {IsxColumnResizeCellDirective} from './isx-column-resize-cell.directive';
 
 @Directive({
-    selector: `[cdk-column-resize-header]`,
-    exportAs: 'cdkColumnResizeHeader',
+    selector: `[isx-column-resize-header]`,
+    exportAs: 'isxColumnResizeHeader',
 })
-export class CdkColumnResizeHeaderDirective extends CdkColumnResizeCellDirective implements OnInit, OnDestroy {
+export class IsxColumnResizeHeaderDirective extends IsxColumnResizeCellDirective implements OnInit, OnDestroy {
 
     private hammerEl: HammerManager;
 
-    @Input('cdk-column-resize-header')
+    @Input('isx-column-resize-header')
     set columnName(name: string) {
         this.name = name || this.matColumnDef.name;
     }

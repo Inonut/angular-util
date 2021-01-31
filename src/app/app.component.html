@@ -1,7 +1,9 @@
-<mat-table [cdk-table-virtual-scroll-fixed-size]="20" (indexChanged)="addNextData($event)" #tvs=cdkTableVirtualScrollFixedSize
+<mat-table [isx-table-virtual-scroll-fixed-size]="20" (indexChanged)="addNextData($event)" #tvs=isxTableVirtualScrollFixedSize
+           [isx-table-message]="'No data to display.'"
+           class="isx-table-components"
            matSort
-           cdkColumnResize (resize)="sizeColumns[$event.name] = $event.size"
-           [cdkColumnDrag]="displayedColumns" (drop)="displayedColumns = $event.columns;"
+           isxColumnResize (resize)="sizeColumns[$event.name] = $event.size"
+           [isxColumnDrag]="displayedColumns" (drop)="displayedColumns = $event.columns;"
            [dataSource]="dataSource">
 
     <ng-container matColumnDef="checkbox">
@@ -16,31 +18,32 @@
     <ng-container *ngFor="let i of columnProcess(columnCount)">
         <ng-container [matColumnDef]="'column' + i">
             <mat-header-cell mat-sort-header
-                             cdk-column-drag-header
-                             cdk-column-resize-header [style.width.px]="sizeColumns['column' + i]"
+                             isx-column-drag-header
+                             isx-column-resize-header [style.width.px]="sizeColumns['column' + i]"
                     *matHeaderCellDef>Column {{i}}</mat-header-cell>
             <mat-cell
-                    cdk-column-drag-cell
-                    cdk-column-resize-cell [style.width.px]="sizeColumns['column' + i]"
+                    isx-column-drag-cell
+                    isx-column-resize-cell [style.width.px]="sizeColumns['column' + i]"
                     *matCellDef="let element">{{element['column' + i]}}</mat-cell>
             <mat-footer-cell
-                    cdk-column-drag-cell
-                    cdk-column-resize-cell [style.width.px]="sizeColumns['column' + i]"
+                    isx-column-drag-cell
+                    isx-column-resize-cell [style.width.px]="sizeColumns['column' + i]"
                     *matFooterCellDef>Footer {{i}}</mat-footer-cell>
         </ng-container>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
 <!--    <mat-row *matRowDef="let row; columns: displayedColumns;" [style.height.px]="row.height" cdk-row-action>-->
-    <mat-row *matRowDef="let row; columns: displayedColumns;" cdk-row-action>
+    <mat-row *matRowDef="let row; columns: displayedColumns;" isx-row-action>
         <ng-template cdkPortal>
-            <div class="cdk-table-actions-show-container">
-                <div class="cdk-table-actions-show">
+            <div class="isx-table-actions-show-container">
+                <div class="isx-table-actions-show">
                     asd
                 </div>
             </div>
         </ng-template>
     </mat-row>
+    <mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></mat-footer-row>
     <mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></mat-footer-row>
 </mat-table>
 
